@@ -1,4 +1,4 @@
-package org.example.utils;
+package tn.esprit.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,7 +10,7 @@ public class MyDatabase {
 
     private static final String URL = "jdbc:mysql://localhost:3306/esport-db";
     private static final String USER = "root";
-    private static final String PASSWORD = ""; 
+    private static final String PASSWORD = "";
 
     private MyDatabase() {
         try {
