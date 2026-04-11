@@ -12,7 +12,7 @@ public class MainUser {
         int idToSupprimer = 25; // Remplacez par l'ID de l'utilisateur que vous souhaitez supprimer
         try {
             User user = new User(
-                    "user2025@example.com",
+                    "user@example.com",
                     "[\"ROLE_USER\"]",
                     "password123",
                     "User Test",

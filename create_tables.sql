@@ -44,3 +44,18 @@ CREATE TABLE IF NOT EXISTS profiling (
     description TEXT,
     statut VARCHAR(50)
 );
+
+CREATE TABLE IF NOT EXISTS `user` (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    roles VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    nom VARCHAR(255) NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    google2fa_secret VARCHAR(255),
+    is_2fa_enabled BOOLEAN NOT NULL DEFAULT FALSE,
+    google_oauth_id VARCHAR(255),
+    oauth_provider VARCHAR(100),
+    face_encoding TEXT,
+    is_face_enabled BOOLEAN NOT NULL DEFAULT FALSE
+);

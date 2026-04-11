@@ -21,7 +21,7 @@ public class ServiceUser implements IService<User> {
     @Override
     public void ajouter(User user) throws SQLException {
         String sql = "INSERT INTO `user`(email, roles, password, nom, is_active, google2fa_secret, is_2fa_enabled, google_oauth_id, oauth_provider, face_encoding, is_face_enabled) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnectionOrThrow().prepareStatement(sql)) {
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getRoles());
             ps.setString(3, user.getPassword());
@@ -40,7 +40,7 @@ public class ServiceUser implements IService<User> {
     @Override
     public void modifier(User user) throws SQLException {
         String sql = "UPDATE `user` SET email=?, roles=?, password=?, nom=?, is_active=?, google2fa_secret=?, is_2fa_enabled=?, google_oauth_id=?, oauth_provider=?, face_encoding=?, is_face_enabled=? WHERE id=?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnectionOrThrow().prepareStatement(sql)) {
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getRoles());
             ps.setString(3, user.getPassword());
@@ -60,7 +60,7 @@ public class ServiceUser implements IService<User> {
     @Override
     public void supprimer(int id) throws SQLException {
         String sql = "DELETE FROM `user` WHERE id=?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnectionOrThrow().prepareStatement(sql)) {
             ps.setInt(1, id);
             ps.executeUpdate();
         }
@@ -71,7 +71,7 @@ public class ServiceUser implements IService<User> {
         String sql = "SELECT * FROM `user`";
         List<User> users = new ArrayList<>();
 
-        try (Statement stmt = conn.createStatement();
+        try (Statement stmt = getConnectionOrThrow().createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 User user = new User(
@@ -93,5 +93,49 @@ public class ServiceUser implements IService<User> {
         }
 
         return users;
+    }
+
+    public boolean emailExists(String email) throws SQLException {
+        String sql = "SELECT 1 FROM `user` WHERE email = ? LIMIT 1";
+        try (PreparedStatement ps = getConnectionOrThrow().prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+
+    public User authenticate(String email, String password) throws SQLException {
+        String sql = "SELECT * FROM `user` WHERE email = ? AND password = ? LIMIT 1";
+        try (PreparedStatement ps = getConnectionOrThrow().prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.setString(2, password);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new User(
+                            rs.getInt("id"),
+                            rs.getString("email"),
+                            rs.getString("roles"),
+                            rs.getString("password"),
+                            rs.getString("nom"),
+                            rs.getBoolean("is_active"),
+                            rs.getString("google2fa_secret"),
+                            rs.getBoolean("is_2fa_enabled"),
+                            rs.getString("google_oauth_id"),
+                            rs.getString("oauth_provider"),
+                            rs.getString("face_encoding"),
+                            rs.getBoolean("is_face_enabled")
+                    );
+                }
+            }
+        }
+        return null;
+    }
+
+    private Connection getConnectionOrThrow() throws SQLException {
+        if (conn == null) {
+            throw new SQLException("Database connection is not available.");
+        }
+        return conn;
     }
 }

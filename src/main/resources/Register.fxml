@@ -14,48 +14,62 @@
 <AnchorPane
         xmlns="http://javafx.com/javafx/8"
         xmlns:fx="http://javafx.com/fxml"
-        fx:controller="tn.esprit.controllers.LoginController"
-        prefHeight="420.0" prefWidth="680.0"
+        fx:controller="tn.esprit.controllers.RegisterController"
+        prefHeight="500.0" prefWidth="760.0"
         style="-fx-background-color: #0a0050;">
 
-    <HBox AnchorPane.topAnchor="40" AnchorPane.bottomAnchor="40"
-          AnchorPane.leftAnchor="60" AnchorPane.rightAnchor="60"
+    <HBox AnchorPane.topAnchor="30" AnchorPane.bottomAnchor="30"
+          AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="50"
           style="-fx-background-color: white; -fx-background-radius: 6;">
 
-        <ImageView fitWidth="280" fitHeight="340" preserveRatio="false">
+        <ImageView fitWidth="300" fitHeight="440" preserveRatio="false">
             <image>
                 <Image url="https://i.pinimg.com/736x/29/bf/08/29bf083bd37ae14f65bb683caf2e3096.jpg"/>
             </image>
         </ImageView>
 
-        <VBox spacing="16" alignment="TOP_LEFT"
-              style="-fx-padding: 48 38 40 38; -fx-background-color: white;">
+        <VBox spacing="14" alignment="TOP_LEFT"
+              style="-fx-padding: 40 36 36 36; -fx-background-color: white;">
 
-            <Label text="Login Form"
+            <Label text="Create Account"
                    style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #111;"/>
 
             <Region prefWidth="26" prefHeight="4"
                     style="-fx-background-color: #E6C819; -fx-background-radius: 2;"/>
 
             <VBox spacing="4">
+                <Label text="Full Name"
+                       style="-fx-font-size: 11px; -fx-text-fill: #777;"/>
+                <TextField fx:id="nomField" promptText="Enter your full name"
+                           style="-fx-background-color: transparent; -fx-border-color: transparent transparent #bbb transparent; -fx-border-width: 0 0 1.5 0; -fx-padding: 6 0; -fx-font-size: 14px;"/>
+            </VBox>
+
+            <VBox spacing="4">
                 <Label text="Email"
                        style="-fx-font-size: 11px; -fx-text-fill: #777;"/>
-                <TextField fx:id="usernameField" promptText="Enter your email"
+                <TextField fx:id="emailField" promptText="Enter your email"
                            style="-fx-background-color: transparent; -fx-border-color: transparent transparent #bbb transparent; -fx-border-width: 0 0 1.5 0; -fx-padding: 6 0; -fx-font-size: 14px;"/>
             </VBox>
 
             <VBox spacing="4">
                 <Label text="Password"
                        style="-fx-font-size: 11px; -fx-text-fill: #777;"/>
-                <PasswordField fx:id="passwordField" promptText="Enter your password"
+                <PasswordField fx:id="passwordField" promptText="Choose a password"
                                style="-fx-background-color: transparent; -fx-border-color: transparent transparent #bbb transparent; -fx-border-width: 0 0 1.5 0; -fx-padding: 6 0; -fx-font-size: 14px;"/>
             </VBox>
 
-            <Button fx:id="loginButton" text="Login"
-                    maxWidth="Infinity" onAction="#handleLogin"
+            <VBox spacing="4">
+                <Label text="Confirm Password"
+                       style="-fx-font-size: 11px; -fx-text-fill: #777;"/>
+                <PasswordField fx:id="confirmPasswordField" promptText="Repeat your password"
+                               style="-fx-background-color: transparent; -fx-border-color: transparent transparent #bbb transparent; -fx-border-width: 0 0 1.5 0; -fx-padding: 6 0; -fx-font-size: 14px;"/>
+            </VBox>
+
+            <Button fx:id="registerButton" text="Register"
+                    maxWidth="Infinity" onAction="#handleRegister"
                     style="-fx-background-color: #5b4cdf; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 11 0; -fx-cursor: hand;"/>
 
-            <Hyperlink text="Create an account" onAction="#goToRegister"
+            <Hyperlink text="Back to login" onAction="#goToLogin"
                        style="-fx-text-fill: #5b4cdf; -fx-font-size: 12px; -fx-border-color: transparent; -fx-padding: 0;"/>
 
             <Label fx:id="messageLabel" text=""
