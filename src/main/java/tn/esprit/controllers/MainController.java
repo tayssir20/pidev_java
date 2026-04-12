@@ -4,7 +4,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -19,7 +21,10 @@ public class MainController implements Initializable {
         // Affiche les produits par défaut au démarrage
     }
 
-
+    @FXML
+    public void showUsers() {
+        loadPage("/users.fxml");
+    }
 
     @FXML
     public void showProducts() {
@@ -32,8 +37,16 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void showUsers() {
-        loadPage("/users.fxml");
+    public void showHome() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/home.fxml"));
+            Stage stage = (Stage) contentArea.getScene().getWindow();
+            stage.setScene(new Scene(root, 1280, 720));
+            stage.setTitle("Esports Community");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadPage(String fxmlPath) {
