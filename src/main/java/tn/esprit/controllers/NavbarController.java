@@ -48,6 +48,14 @@ public class NavbarController {
         }
     }
 
+    @FXML
+    private void goToJeux(ActionEvent event) {
+        try {
+            loadScene(event, "/jeuxCatalog.fxml", "Jeux");
+        } catch (IOException e) {
+            System.out.println("Unable to open jeux.");
+        }
+    }
 
     @FXML
     private void goToAbout(ActionEvent event) {

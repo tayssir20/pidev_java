@@ -6,7 +6,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -16,10 +22,12 @@ import tn.esprit.services.ServiceJeu;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 
-public class JeuxController implements Initializable {
+public class JeuxDashboardController implements Initializable {
 
     @FXML
     private TableView<Jeu> jeuxTable;
@@ -34,13 +42,15 @@ public class JeuxController implements Initializable {
     @FXML
     private TableColumn<Jeu, String> statutCol;
     @FXML
-    private TableColumn<Jeu, String> descCol;
-    @FXML
     private TableColumn<Jeu, String> actionsCol;
     @FXML
     private Label messageLabel;
     @FXML
     private Label totalJeuxLabel;
+    @FXML
+    private Label distinctGenresLabel;
+    @FXML
+    private Label distinctPlateformesLabel;
 
     private final ServiceJeu serviceJeu = new ServiceJeu();
 
@@ -56,16 +66,15 @@ public class JeuxController implements Initializable {
         genreCol.setCellValueFactory(new PropertyValueFactory<>("genre"));
         plateformeCol.setCellValueFactory(new PropertyValueFactory<>("plateforme"));
         statutCol.setCellValueFactory(new PropertyValueFactory<>("statut"));
-        descCol.setCellValueFactory(new PropertyValueFactory<>("description"));
 
         actionsCol.setCellFactory(col -> new TableCell<>() {
-            private final Button editBtn = new Button("Modifier");
-            private final Button deleteBtn = new Button("Supprimer");
-            private final HBox box = new HBox(8, editBtn, deleteBtn);
+            private final Button editBtn = new Button("✏️");
+            private final Button deleteBtn = new Button("🗑");
+            private final HBox box = new HBox(5, editBtn, deleteBtn);
 
             {
-                editBtn.setStyle("-fx-background-color: #f59e0b; -fx-text-fill: white; -fx-cursor: hand;");
-                deleteBtn.setStyle("-fx-background-color: #dc2626; -fx-text-fill: white; -fx-cursor: hand;");
+                editBtn.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-cursor: hand;");
+                deleteBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-cursor: hand;");
 
                 editBtn.setOnAction(e -> {
                     Jeu j = getTableView().getItems().get(getIndex());
@@ -90,11 +99,28 @@ public class JeuxController implements Initializable {
         try {
             List<Jeu> list = serviceJeu.getAll();
             jeuxTable.setItems(FXCollections.observableArrayList(list));
-            totalJeuxLabel.setText(String.valueOf(list.size()));
+            updateStats(list);
             messageLabel.setText("");
         } catch (SQLException e) {
-            showError("Impossible de charger les jeux : " + e.getMessage());
+            messageLabel.setStyle("-fx-text-fill: #e74c3c;");
+            messageLabel.setText("Erreur : " + e.getMessage());
         }
+    }
+
+    private void updateStats(List<Jeu> list) {
+        totalJeuxLabel.setText(String.valueOf(list.size()));
+        Set<String> genres = new HashSet<>();
+        Set<String> plats = new HashSet<>();
+        for (Jeu j : list) {
+            if (j.getGenre() != null && !j.getGenre().isBlank()) {
+                genres.add(j.getGenre().trim());
+            }
+            if (j.getPlateforme() != null && !j.getPlateforme().isBlank()) {
+                plats.add(j.getPlateforme().trim());
+            }
+        }
+        distinctGenresLabel.setText(String.valueOf(genres.size()));
+        distinctPlateformesLabel.setText(String.valueOf(plats.size()));
     }
 
     @FXML
@@ -108,7 +134,8 @@ public class JeuxController implements Initializable {
             stage.showAndWait();
             loadJeux();
         } catch (IOException e) {
-            showError("Erreur d'ouverture du formulaire : " + e.getMessage());
+            messageLabel.setStyle("-fx-text-fill: #e74c3c;");
+            messageLabel.setText("Erreur : " + e.getMessage());
         }
     }
 
@@ -124,7 +151,8 @@ public class JeuxController implements Initializable {
             stage.showAndWait();
             loadJeux();
         } catch (IOException e) {
-            showError("Erreur d'ouverture du formulaire : " + e.getMessage());
+            messageLabel.setStyle("-fx-text-fill: #e74c3c;");
+            messageLabel.setText("Erreur : " + e.getMessage());
         }
     }
 
@@ -137,21 +165,14 @@ public class JeuxController implements Initializable {
             if (button == ButtonType.OK) {
                 try {
                     serviceJeu.supprimer(j.getId());
-                    messageLabel.setStyle("-fx-text-fill: #4ade80;");
+                    messageLabel.setStyle("-fx-text-fill: #27ae60;");
                     messageLabel.setText("Jeu supprimé.");
                     loadJeux();
                 } catch (SQLException ex) {
-                    showError("Suppression impossible : " + ex.getMessage());
+                    messageLabel.setStyle("-fx-text-fill: #e74c3c;");
+                    messageLabel.setText("Suppression impossible : " + ex.getMessage());
                 }
             }
         });
-    }
-
-    private void showError(String msg) {
-        Alert a = new Alert(Alert.AlertType.ERROR);
-        a.setTitle("Erreur");
-        a.setHeaderText(null);
-        a.setContentText(msg);
-        a.showAndWait();
     }
 }

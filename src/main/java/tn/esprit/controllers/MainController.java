@@ -37,6 +37,11 @@ public class MainController implements Initializable {
     }
 
     @FXML
+    public void showJeux() {
+        loadPage("/jeuxDashboard.fxml");
+    }
+
+    @FXML
     public void showBlogs() {
         loadPage("/Blogs.fxml");
     }
