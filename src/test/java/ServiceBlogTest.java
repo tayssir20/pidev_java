@@ -17,7 +17,7 @@ public class ServiceBlogTest {
         service = new ServiceBlog();
     }
 
-    // ✅ Test 1 : Ajouter un blog
+
     @Test
     @Order(1)
     void testAjouterBlog() {
@@ -43,7 +43,7 @@ public class ServiceBlogTest {
         System.out.println("✅ testAjouterBlog passed — id = " + idBlogTest);
     }
 
-    // ✅ Test 2 : Afficher les blogs
+
     @Test
     @Order(2)
     void testAfficherBlogs() {
@@ -55,7 +55,7 @@ public class ServiceBlogTest {
         System.out.println("✅ testAfficherBlogs passed — " + blogs.size() + " blogs");
     }
 
-    // ✅ Test 3 : Modifier un blog
+
     @Test
     @Order(3)
     void testModifierBlog() {
@@ -78,7 +78,7 @@ public class ServiceBlogTest {
         System.out.println("✅ testModifierBlog passed");
     }
 
-    // ✅ Test 4 : Supprimer un blog
+
     @Test
     @Order(4)
     void testSupprimerBlog() {
@@ -94,7 +94,7 @@ public class ServiceBlogTest {
         System.out.println("✅ testSupprimerBlog passed");
     }
 
-    // ✅ Nettoyage final
+
     @AfterAll
     static void cleanUp() {
         List<Blog> blogs = service.afficher();

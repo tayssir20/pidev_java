@@ -13,13 +13,13 @@
           AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"
           AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
 
-        <!-- NAVBAR -->
+
         <fx:include source="/navbar.fxml"/>
 
-        <!-- CONTENT -->
+
         <VBox spacing="24" style="-fx-padding: 32 40 32 40;">
 
-            <!-- HEADER -->
+
             <HBox alignment="CENTER_LEFT" spacing="15">
                 <VBox spacing="4">
                     <Label text="Blog"
@@ -48,7 +48,7 @@
                 </HBox>
             </HBox>
 
-            <!-- ARTICLES -->
+
             <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
                         style="-fx-background: transparent;
                                -fx-background-color: transparent;

@@ -15,7 +15,7 @@ public class ServiceBlog {
         cnx = MyDatabase.getInstance().getConnection();
     }
 
-    // CREATE
+
     public void ajouter(Blog blog) {
         String sql = "INSERT INTO blog (title, content, created_at, category, image_name, comment_count) VALUES (?, ?, NOW(), ?, ?, 0)";
 
@@ -32,7 +32,7 @@ public class ServiceBlog {
         }
     }
 
-    // READ
+
     public List<Blog> afficher() {
         List<Blog> list = new ArrayList<>();
         String sql = "SELECT * FROM blog";
@@ -60,7 +60,7 @@ public class ServiceBlog {
         return list;
     }
 
-    // UPDATE
+
     public void modifier(Blog blog) {
         String sql = "UPDATE blog SET title=?, content=?, category=?, image_name=? WHERE id=?";
 
@@ -78,11 +78,10 @@ public class ServiceBlog {
         }
     }
 
-    // DELETE
-    // DELETE
+
     public void supprimer(int id) {
 
-        // 2. Ensuite supprimer le blog
+
         String deleteBlog = "DELETE FROM blog WHERE id = ?";
 
         try {
