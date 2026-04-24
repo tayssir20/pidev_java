@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import tn.esprit.entities.User;
+import tn.esprit.services.GoogleOAuthService;
 import tn.esprit.services.ServiceUser;
 import tn.esprit.utils.SessionManager;
 
@@ -144,5 +145,69 @@ public class LoginController {
         stage.setScene(new Scene(root));
         stage.setTitle(title);
         stage.show();
+    }
+
+    @FXML
+    private void handleGoogleSignUp() {
+        try {
+            // Google OAuth credentials from user input
+            String clientId = "460245401741-m94mns2ae0675cvo0fsiiahrr9qqbagu.apps.googleusercontent.com";
+            String clientSecret = "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";
+
+            GoogleOAuthService oauthService = new GoogleOAuthService(clientId, clientSecret);
+            User googleUser = oauthService.authenticateAndGetUser();
+
+            // Check if user already exists
+            User existingUser = serviceUser.findByGoogleOauthId(googleUser.getGoogleOauthId());
+            if (existingUser != null) {
+                // User exists, log them in
+                SessionManager.setCurrentUser(existingUser);
+                messageLabel.setTextFill(Color.web("#5b4cdf"));
+                messageLabel.setText("Bienvenue, " + existingUser.getNom() + "!");
+                loadHomePage();
+            } else {
+                // Check if email is already registered with regular account
+                if (serviceUser.emailExists(googleUser.getEmail())) {
+                    messageLabel.setTextFill(Color.RED);
+                    messageLabel.setText("Un compte avec cet email existe déjà. Veuillez vous connecter normalement.");
+                    return;
+                }
+
+                // Create new user
+                User newUser = serviceUser.createOAuthUser(googleUser);
+                SessionManager.setCurrentUser(newUser);
+                messageLabel.setTextFill(Color.web("#27ae60"));
+                messageLabel.setText("Compte créé avec succès ! Bienvenue, " + newUser.getNom() + "!");
+                loadHomePage();
+            }
+
+        } catch (IOException e) {
+            messageLabel.setTextFill(Color.RED);
+            messageLabel.setText("Erreur lors de l'authentification Google : " + e.getMessage());
+        } catch (SQLException e) {
+            messageLabel.setTextFill(Color.RED);
+            messageLabel.setText("Erreur base de données : " + e.getMessage());
+        } catch (Exception e) {
+            messageLabel.setTextFill(Color.RED);
+            messageLabel.setText("Erreur lors de l'authentification Google : " + e.getMessage());
+        }
+    }
+
+    private void loadHomePage() {
+        try {
+            User user = SessionManager.getCurrentUser();
+            String fxml = "/home.fxml";
+            if ("admin@gmail.com".equalsIgnoreCase(user.getEmail())) {
+                fxml = "/main.fxml";
+            }
+            Parent root = FXMLLoader.load(getClass().getResource(fxml));
+            Stage stage = (Stage) loginButton.getScene().getWindow();
+            stage.setScene(new Scene(root, 980, 720));
+            stage.setTitle("Esports Community");
+            stage.show();
+        } catch (IOException e) {
+            messageLabel.setTextFill(Color.RED);
+            messageLabel.setText("Impossible d'ouvrir la page d'accueil.");
+        }
     }
 }

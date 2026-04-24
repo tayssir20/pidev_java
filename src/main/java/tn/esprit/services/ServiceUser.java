@@ -188,4 +188,55 @@ public class ServiceUser implements IService<User> {
             ps.executeUpdate();
         }
     }
+
+    public User findByGoogleOauthId(String googleOauthId) throws SQLException {
+        String sql = "SELECT * FROM `user` WHERE google_oauth_id = ? LIMIT 1";
+        try (PreparedStatement ps = getConnectionOrThrow().prepareStatement(sql)) {
+            ps.setString(1, googleOauthId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new User(
+                            rs.getInt("id"),
+                            rs.getString("email"),
+                            rs.getString("roles"),
+                            rs.getString("password"),
+                            rs.getString("nom"),
+                            rs.getBoolean("is_active"),
+                            rs.getString("google2fa_secret"),
+                            rs.getBoolean("is_2fa_enabled"),
+                            rs.getString("google_oauth_id"),
+                            rs.getString("oauth_provider"),
+                            rs.getString("face_encoding"),
+                            rs.getBoolean("is_face_enabled")
+                    );
+                }
+            }
+        }
+        return null;
+    }
+
+    public User createOAuthUser(User user) throws SQLException {
+        String sql = "INSERT INTO `user`(email, roles, password, nom, is_active, google2fa_secret, is_2fa_enabled, google_oauth_id, oauth_provider, face_encoding, is_face_enabled) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = getConnectionOrThrow().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, user.getEmail());
+            ps.setString(2, user.getRoles());
+            ps.setString(3, ""); // No password for OAuth users
+            ps.setString(4, user.getNom());
+            ps.setBoolean(5, user.isActive());
+            ps.setString(6, user.getGoogle2faSecret());
+            ps.setBoolean(7, user.isIs2faEnabled());
+            ps.setString(8, user.getGoogleOauthId());
+            ps.setString(9, user.getOauthProvider());
+            ps.setString(10, user.getFaceEncoding());
+            ps.setBoolean(11, user.isFaceEnabled());
+            ps.executeUpdate();
+
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    user.setId(rs.getInt(1));
+                }
+            }
+        }
+        return user;
+    }
 }
