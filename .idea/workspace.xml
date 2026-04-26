@@ -5,13 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="884cf7d6-6a9e-4e69-a425-b844a341d249" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/tn/esprit/controllers/BlogDetailController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/tn/esprit/entities/Comment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/tn/esprit/services/ServiceComment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/BlogDetail.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tn/esprit/services/ServiceBlogLike.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tn/esprit/services/ServiceBlogRating.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tn/esprit/services/ServiceCommentReaction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tn/esprit/services/ServiceReport.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/tn/esprit/controllers/AfficherBlogsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tn/esprit/controllers/AfficherBlogsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/AfficherBlogs.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/AfficherBlogs.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tn/esprit/controllers/BlogDetailController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tn/esprit/controllers/BlogDetailController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tn/esprit/controllers/BlogsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tn/esprit/controllers/BlogsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/BlogDetail.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/BlogDetail.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,7 +47,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "salma",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/dot/pidev_java/src/main/resources",
     "node.js.detected.package.eslint": "true",
@@ -54,6 +56,11 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ]
   }
 }]]></component>
   <component name="RecentsManager">
@@ -123,7 +130,8 @@
       <updated>1777069404657</updated>
       <workItem from="1777069406113" duration="5191000" />
       <workItem from="1777130740655" duration="5556000" />
-      <workItem from="1777155649846" duration="2024000" />
+      <workItem from="1777155649846" duration="5754000" />
+      <workItem from="1777221854267" duration="2788000" />
     </task>
     <servers />
   </component>
