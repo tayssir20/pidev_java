@@ -4,6 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+    <list default="true" id="884cf7d6-6a9e-4e69-a425-b844a341d249" name="Changes" comment="" />
     <list default="true" id="884cf7d6-6a9e-4e69-a425-b844a341d249" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/tn/esprit/controllers/FaceRecognitionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tn/esprit/controllers/FaceRecognitionController.java" afterDir="false" />
@@ -50,6 +51,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "salma",
     "git-widget-placeholder": "sarrra",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
@@ -82,8 +84,8 @@
   <component name="RunManager" selected="Application.MainFX">
     <configuration name="FxLauncher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="tn.esprit.test.FxLauncher" />
-      <module name="pidev" />
-      <option name="VM_PARAMETERS" value="--module-path &quot;C:\Users\saada\.m2\repository\org\openjfx\javafx-controls\21.0.2\javafx-controls-21.0.2-win.jar;C:\Users\saada\.m2\repository\org\openjfx\javafx-fxml\21.0.2\javafx-fxml-21.0.2-win.jar;C:\Users\saada\.m2\repository\org\openjfx\javafx-graphics\21.0.2\javafx-graphics-21.0.2-win.jar;C:\Users\saada\.m2\repository\org\openjfx\javafx-base\21.0.2\javafx-base-21.0.2-win.jar&quot; --add-modules javafx.controls,javafx.fxml" />
+      <module name="WorkshopJDBC-JavaFX-3A56" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;C:\Users\dot\.m2\repository\org\openjfx\javafx-controls\21.0.2;C:\Users\dot\.m2\repository\org\openjfx\javafx-fxml\21.0.2;C:\Users\dot\.m2\repository\org\openjfx\javafx-graphics\21.0.2;C:\Users\dot\.m2\repository\org\openjfx\javafx-base\21.0.2&quot; --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="tn.esprit.test.*" />
@@ -96,6 +98,8 @@
     </configuration>
     <configuration name="MainFX" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="tn.esprit.test.MainFX" />
+      <module name="WorkshopJDBC-JavaFX-3A56" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;C:\Users\dot\.m2\repository\org\openjfx\javafx-controls\21.0.2;C:\Users\dot\.m2\repository\org\openjfx\javafx-fxml\21.0.2;C:\Users\dot\.m2\repository\org\openjfx\javafx-graphics\21.0.2;C:\Users\dot\.m2\repository\org\openjfx\javafx-base\21.0.2&quot; --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base" />
       <module name="pidev" />
       <option name="VM_PARAMETERS" value="--module-path &quot;C:\Users\MSI\.m2\repository\org\openjfx\javafx-controls\21.0.2;C:\Users\MSI\.m2\repository\org\openjfx\javafx-fxml\21.0.2;C:\Users\MSI\.m2\repository\org\openjfx\javafx-graphics\21.0.2;C:\Users\MSI\.m2\repository\org\openjfx\javafx-base\21.0.2&quot; --add-modules javafx.controls,javafx.fxml" />
       <extension name="coverage">
@@ -137,6 +141,8 @@
       <workItem from="1777130740655" duration="5556000" />
       <workItem from="1777155649846" duration="5754000" />
       <workItem from="1777221854267" duration="2788000" />
+      <workItem from="1777394722302" duration="705000" />
+      <workItem from="1777395501038" duration="3584000" />
     </task>
     <servers />
   </component>

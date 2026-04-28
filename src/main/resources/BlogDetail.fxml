@@ -60,7 +60,31 @@
                     <Label fx:id="blogContent" wrapText="true"
                            style="-fx-text-fill: #cbd5e1; -fx-font-size: 18px; -fx-line-spacing: 5;"/>
                 </VBox>
-
+                <!-- TRADUCTION -->
+                <VBox spacing="8" style="-fx-padding: 10 0 10 0;">
+                    <Label text="🌍 Traduire ce blog :"
+                           style="-fx-text-fill: #94a3b8; -fx-font-size: 13px;"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Button text="🇬🇧 Anglais" onAction="#handleTranslateEN"
+                                style="-fx-background-color: #1e293b; -fx-text-fill: white;
+                       -fx-background-radius: 20; -fx-cursor: hand;
+                       -fx-font-size: 12px; -fx-padding: 5 15 5 15;"/>
+                        <Button text="🇸🇦 Arabe" onAction="#handleTranslateAR"
+                                style="-fx-background-color: #1e293b; -fx-text-fill: white;
+                       -fx-background-radius: 20; -fx-cursor: hand;
+                       -fx-font-size: 12px; -fx-padding: 5 15 5 15;"/>
+                        <Button text="🇪🇸 Espagnol" onAction="#handleTranslateES"
+                                style="-fx-background-color: #1e293b; -fx-text-fill: white;
+                       -fx-background-radius: 20; -fx-cursor: hand;
+                       -fx-font-size: 12px; -fx-padding: 5 15 5 15;"/>
+                        <Button text="↩️ Original" onAction="#handleRestoreOriginal"
+                                style="-fx-background-color: #334155; -fx-text-fill: white;
+                       -fx-background-radius: 20; -fx-cursor: hand;
+                       -fx-font-size: 12px; -fx-padding: 5 15 5 15;"/>
+                    </HBox>
+                    <Label fx:id="translationStatus" text=""
+                           style="-fx-text-fill: #64748b; -fx-font-size: 11px;"/>
+                </VBox>
                 <!-- Comments Section Header -->
                 <VBox spacing="10">
                     <Label fx:id="commentHeaderLabel" text="Commentaires"

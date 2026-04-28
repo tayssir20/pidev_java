@@ -24,7 +24,11 @@ import java.util.Map;
 import java.util.Optional;
 
 public class BlogDetailController {
+    @FXML private Label translationStatus;
 
+    private final TranslationService translationService = new TranslationService();
+    private String originalTitle;
+    private String originalContent;
     @FXML private ImageView blogImage;
     @FXML private Label     categoryBadge;
     @FXML private Label     dateLabel;
@@ -64,6 +68,11 @@ public class BlogDetailController {
         dateLabel.setText(currentBlog.getCreatedAt() != null
                 ? currentBlog.getCreatedAt().toString().substring(0, 10) : "");
         categoryBadge.setText("BLOG");
+
+        // Sauvegarder l'original
+        originalTitle   = currentBlog.getTitle();
+        originalContent = currentBlog.getCategory();
+
         File imgFile = new File(HTDOCS_PATH + currentBlog.getContent());
         if (imgFile.exists()) {
             blogImage.setImage(new Image(imgFile.toURI().toString()));
@@ -361,5 +370,41 @@ public class BlogDetailController {
         alert.setTitle(title);
         alert.setContentText(content);
         alert.show();
+    }
+    @FXML
+    private void handleTranslateEN() {
+        translateBlog("English", "🇬🇧 Traduit en Anglais");
+    }
+
+    @FXML
+    private void handleTranslateAR() {
+        translateBlog("Arabic", "🇸🇦 Traduit en Arabe");
+    }
+
+    @FXML
+    private void handleTranslateES() {
+        translateBlog("Spanish", "🇪🇸 Traduit en Espagnol");
+    }
+
+    @FXML
+    private void handleRestoreOriginal() {
+        blogTitle.setText(originalTitle);
+        blogContent.setText(originalContent);
+        translationStatus.setText("");
+    }
+
+    private void translateBlog(String targetLanguage, String statusText) {
+        translationStatus.setText("⏳ Traduction en cours...");
+
+        new Thread(() -> {
+            String translatedTitle   = translationService.translate(originalTitle, targetLanguage);
+            String translatedContent = translationService.translate(originalContent, targetLanguage);
+
+            javafx.application.Platform.runLater(() -> {
+                blogTitle.setText(translatedTitle);
+                blogContent.setText(translatedContent);
+                translationStatus.setText(statusText);
+            });
+        }).start();
     }
 }
