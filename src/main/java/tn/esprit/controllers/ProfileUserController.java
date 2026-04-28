@@ -296,18 +296,21 @@ public class ProfileUserController {
             return;
         }
 
-        System.out.println("Enabling face recognition for user: " + currentUser.getNom());
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FaceRecognition.fxml"));
+            Parent root = loader.load();
 
-        cameraSection.setVisible(true);
-        cameraSection.setManaged(true);
-        enableFaceRecognitionButton.setVisible(false);
-        enableFaceRecognitionButton.setManaged(false);
-        if (profileDisableFaceButton != null) {
-            profileDisableFaceButton.setVisible(false);
-            profileDisableFaceButton.setManaged(false);
+            FaceRecognitionController controller = loader.getController();
+            controller.setUser(currentUser);
+
+            Stage stage = (Stage) enableFaceRecognitionButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Face Recognition");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            updateCameraStatus("Unable to open face recognition screen.", "#e8314a");
         }
-
-        startCamera();
     }
 
     private void startCamera() {

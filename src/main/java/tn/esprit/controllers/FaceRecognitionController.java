@@ -1,20 +1,35 @@
 package tn.esprit.controllers;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.*;
-import javafx.event.ActionEvent;
-import org.opencv.core.*;
-import org.opencv.imgproc.Imgproc;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfByte;
+import org.opencv.core.MatOfRect;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.videoio.VideoCapture;
+import org.opencv.videoio.Videoio;
 import tn.esprit.entities.User;
 import tn.esprit.services.ServiceUser;
 import tn.esprit.utils.SessionManager;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -33,136 +48,204 @@ public class FaceRecognitionController {
     private CascadeClassifier faceDetector;
     private ScheduledExecutorService timer;
     private Mat lastDetectedFace;
-    private boolean faceDetected = false;
-
-    // Path to save the enrolled face image
-    private String getFaceDataPath() {
-        if (user == null) return "face_data/enrolled_face.jpg";
-        return "face_data/user_" + user.getId() + ".jpg";
-    }
-
     private User user;
-    private ServiceUser serviceUser = new ServiceUser();
+
+    private final ServiceUser serviceUser = new ServiceUser();
 
     @FXML
     public void initialize() {
-        // Load OpenCV native library
-        nu.pattern.OpenCV.loadLocally();
+        try {
+            nu.pattern.OpenCV.loadLocally();
 
-        // Load face detector (Haar Cascade)
-        faceDetector = new CascadeClassifier();
-        faceDetector.load(getClass().getResource("/haarcascade_frontalface_default.xml").getPath());
+            faceDetector = new CascadeClassifier();
+            boolean cascadeLoaded = loadFaceDetector();
 
-        // Check if face already enrolled
-        if (user != null && user.isFaceEnabled() && Files.exists(Paths.get(getFaceDataPath()))) {
-            disableFaceButton.setVisible(true);
-            disableFaceButton.setManaged(true);
+            if (user == null) {
+                user = SessionManager.getCurrentUser();
+            }
+
+            updateDisableButtonState();
+            startCamera();
+            if (!cascadeLoaded) {
+                updateStatus("Camera started. Face detection is unavailable, but capture still works.", "#f5a623");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            updateStatus("Unable to initialize face recognition: " + e.getMessage(), "#e8314a");
         }
+    }
 
-        startCamera();
+    public void setUser(User user) {
+        this.user = user;
+        updateDisableButtonState();
+    }
+
+    private boolean loadFaceDetector() {
+        try {
+            URL resource = getClass().getResource("/haarcascade_frontalface_default.xml");
+            if (resource == null) {
+                System.out.println("Cascade resource not found.");
+                return false;
+            }
+
+            try (java.io.InputStream inputStream = resource.openStream()) {
+                File tempFile = File.createTempFile("cascade", ".xml");
+                java.nio.file.Files.copy(
+                        inputStream,
+                        tempFile.toPath(),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING
+                );
+                tempFile.deleteOnExit();
+
+                long fileSize = tempFile.length();
+                if (fileSize < 100_000) {
+                    System.out.println("Cascade file is too small to be valid: " + fileSize + " bytes");
+                    return false;
+                }
+
+                boolean loaded = faceDetector.load(tempFile.getAbsolutePath());
+                if (!loaded || faceDetector.empty()) {
+                    System.out.println("Failed to load cascade classifier from: " + tempFile.getAbsolutePath());
+                    return false;
+                }
+            }
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private String getFaceDataPath() {
+        if (user == null) {
+            return "face_data/enrolled_face.jpg";
+        }
+        return "face_data/user_" + user.getId() + ".jpg";
+    }
+
+    private void updateDisableButtonState() {
+        boolean enabled = user != null
+                && user.isFaceEnabled()
+                && Files.exists(Paths.get(getFaceDataPath()));
+
+        if (disableFaceButton != null) {
+            disableFaceButton.setVisible(enabled);
+            disableFaceButton.setManaged(enabled);
+        }
     }
 
     private void startCamera() {
-        capture = new VideoCapture(0);
+        capture = new VideoCapture(0, Videoio.CAP_DSHOW);
+        if (!capture.isOpened()) {
+            capture = new VideoCapture(1, Videoio.CAP_DSHOW);
+        }
 
         if (!capture.isOpened()) {
-            updateStatus("Error accessing camera: Requested device not found", "#888888");
+            updateStatus("Error accessing camera: requested device not found.", "#e8314a");
             return;
         }
 
-        // Grab frame every 33ms (~30 FPS)
+        updateStatus("Camera initialized. Position your face in front of it.", "#888888");
+
         timer = Executors.newSingleThreadScheduledExecutor();
         timer.scheduleAtFixedRate(this::grabFrame, 0, 33, TimeUnit.MILLISECONDS);
     }
 
     private void grabFrame() {
         Mat frame = new Mat();
-        if (!capture.read(frame) || frame.empty()) return;
-
-        // Detect faces
-        MatOfRect faceDetections = new MatOfRect();
-        Mat gray = new Mat();
-        Imgproc.cvtColor(frame, gray, Imgproc.COLOR_BGR2GRAY);
-        Imgproc.equalizeHist(gray, gray);
-
-        faceDetector.detectMultiScale(
-                gray, faceDetections, 1.1, 3, 0,
-                new Size(80, 80), new Size(400, 400)
-        );
-
-        Rect[] faces = faceDetections.toArray();
-        faceDetected = faces.length > 0;
-
-        for (Rect face : faces) {
-            // Draw blue rectangle around face
-            Imgproc.rectangle(frame, face, new Scalar(255, 0, 0), 2);
-
-            // Save the face region
-            lastDetectedFace = new Mat(gray, face);
-
-            // Show confidence label
-            Imgproc.putText(frame, "99.0", new Point(face.x + face.width - 40, face.y - 5),
-                    Imgproc.FONT_HERSHEY_SIMPLEX, 0.5, new Scalar(255, 255, 255), 1);
+        if (!capture.read(frame) || frame.empty()) {
+            return;
         }
 
-        // Update UI on JavaFX thread
-        Image imageToShow = matToImage(frame);
+        Mat previewFrame = frame.clone();
+
+        if (faceDetector != null && !faceDetector.empty()) {
+            Mat gray = new Mat();
+            MatOfRect faceDetections = new MatOfRect();
+
+            Imgproc.cvtColor(frame, gray, Imgproc.COLOR_BGR2GRAY);
+            Imgproc.equalizeHist(gray, gray);
+            faceDetector.detectMultiScale(
+                    gray,
+                    faceDetections,
+                    1.1,
+                    3,
+                    0,
+                    new Size(80, 80),
+                    new Size(400, 400)
+            );
+
+            Rect[] faces = faceDetections.toArray();
+            if (faces.length > 0) {
+                Rect face = faces[0];
+                Imgproc.rectangle(previewFrame, face, new Scalar(255, 0, 0), 2);
+                Imgproc.putText(
+                        previewFrame,
+                        "Face detected",
+                        new Point(face.x, Math.max(20, face.y - 10)),
+                        Imgproc.FONT_HERSHEY_SIMPLEX,
+                        0.6,
+                        new Scalar(255, 255, 255),
+                        1
+                );
+            }
+        }
+
+        if (lastDetectedFace != null) {
+            lastDetectedFace.release();
+        }
+        lastDetectedFace = frame.clone();
+
+        Image imageToShow = matToImage(previewFrame);
         Platform.runLater(() -> {
             cameraView.setImage(imageToShow);
-            if (faceDetected) {
-                updateStatus("Face detected! Click Capture Face to enroll.", "#22aa44");
-            } else {
-                updateStatus("No face detected. Please look at the camera.", "#888888");
-            }
+            updateStatus("Camera is running. Click Capture Face when ready.", "#22aa44");
         });
     }
 
     @FXML
     private void handleCaptureFace(ActionEvent event) {
-        if (!faceDetected || lastDetectedFace == null) {
-            updateStatus("No face detected! Please look at the camera.", "#e8314a");
+        User currentUser = user != null ? user : SessionManager.getCurrentUser();
+        if (currentUser == null) {
+            updateStatus("No user is logged in.", "#e8314a");
             return;
         }
 
-        // Show processing state
-        captureFaceButton.setText("⏳ Processing...");
+        if (lastDetectedFace == null || lastDetectedFace.empty()) {
+            updateStatus("No valid frame available. Please look at the camera.", "#e8314a");
+            return;
+        }
+
+        captureFaceButton.setText("Processing...");
         captureFaceButton.setDisable(true);
 
         new Thread(() -> {
             try {
-                // Create directory if not exists
                 Files.createDirectories(Paths.get("face_data"));
 
-                // Save face image to disk
                 String path = getFaceDataPath();
-                org.opencv.imgcodecs.Imgcodecs.imwrite(path, lastDetectedFace);
+                Imgcodecs.imwrite(path, lastDetectedFace);
 
-                // Update user in database
-                if (user != null) {
-                    user.setFaceEncoding(path);
-                    user.setFaceEnabled(true);
-                    try {
-                        serviceUser.modifier(user);
-                    } catch (SQLException e) {
-                        Platform.runLater(() -> {
-                            captureFaceButton.setText("Capture Face");
-                            captureFaceButton.setDisable(false);
-                            updateStatus("Error saving to database: " + e.getMessage(), "#e8314a");
-                        });
-                        return;
-                    }
-                }
+                currentUser.setFaceEncoding(path);
+                currentUser.setFaceEnabled(true);
+                serviceUser.modifier(currentUser);
 
-                Thread.sleep(800); // Simulate processing
+                user = currentUser;
+                SessionManager.setCurrentUser(currentUser);
 
                 Platform.runLater(() -> {
                     captureFaceButton.setText("Capture Face");
                     captureFaceButton.setDisable(false);
-                    disableFaceButton.setVisible(true);
-                    disableFaceButton.setManaged(true);
-                    updateStatus("✅ Face enrolled successfully!", "#22aa44");
+                    updateDisableButtonState();
+                    updateStatus("Face enrolled successfully.", "#22aa44");
                 });
-
+            } catch (SQLException e) {
+                Platform.runLater(() -> {
+                    captureFaceButton.setText("Capture Face");
+                    captureFaceButton.setDisable(false);
+                    updateStatus("Error saving to database: " + e.getMessage(), "#e8314a");
+                });
             } catch (Exception e) {
                 Platform.runLater(() -> {
                     captureFaceButton.setText("Capture Face");
@@ -175,15 +258,20 @@ public class FaceRecognitionController {
 
     @FXML
     private void handleDisableFaceRecognition(ActionEvent event) {
+        User currentUser = user != null ? user : SessionManager.getCurrentUser();
+
         try {
             Files.deleteIfExists(Paths.get(getFaceDataPath()));
-            if (user != null) {
-                user.setFaceEnabled(false);
-                user.setFaceEncoding(null);
-                serviceUser.modifier(user);
+
+            if (currentUser != null) {
+                currentUser.setFaceEnabled(false);
+                currentUser.setFaceEncoding(null);
+                serviceUser.modifier(currentUser);
+                SessionManager.setCurrentUser(currentUser);
+                user = currentUser;
             }
-            disableFaceButton.setVisible(false);
-            disableFaceButton.setManaged(false);
+
+            updateDisableButtonState();
             updateStatus("Face recognition has been disabled.", "#888888");
         } catch (Exception e) {
             updateStatus("Error disabling: " + e.getMessage(), "#e8314a");
@@ -194,44 +282,47 @@ public class FaceRecognitionController {
     private void handleBackToProfile(ActionEvent event) {
         stopCamera();
         try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
-                    getClass().getResource("/tn/esprit/views/ProfileUser.fxml")
-            );
-            javafx.scene.Parent root = loader.load();
-            javafx.stage.Stage stage = (javafx.stage.Stage) cameraView.getScene().getWindow();
-            stage.setScene(new javafx.scene.Scene(root));
-        } catch (Exception e) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ProfileUser.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) cameraView.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Profile User");
+            stage.show();
+        } catch (IOException e) {
             e.printStackTrace();
+            updateStatus("Unable to return to profile.", "#e8314a");
         }
     }
 
-    // ─── Face Login (call this from LoginController) ───────────────────────
-    // Moved to FaceRecognitionService
-
-    // ─── Helpers ────────────────────────────────────────────────────────────
     private void updateStatus(String message, String color) {
-        Platform.runLater(() ->
-                statusLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: " + color + ";")
-        );
-        Platform.runLater(() -> statusLabel.setText(message));
+        Platform.runLater(() -> {
+            statusLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: " + color + ";");
+            statusLabel.setText(message);
+        });
     }
 
     private Image matToImage(Mat frame) {
         MatOfByte buffer = new MatOfByte();
-        org.opencv.imgcodecs.Imgcodecs.imencode(".png", frame, buffer);
+        Imgcodecs.imencode(".png", frame, buffer);
         return new Image(new java.io.ByteArrayInputStream(buffer.toArray()));
     }
 
     private void stopCamera() {
         if (timer != null && !timer.isShutdown()) {
             timer.shutdown();
-            try { timer.awaitTermination(33, TimeUnit.MILLISECONDS); }
-            catch (InterruptedException ignored) {}
+            try {
+                timer.awaitTermination(100, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException ignored) {
+            }
         }
-        if (capture != null && capture.isOpened()) capture.release();
-    }
 
-    public void setUser(User user) {
-        this.user = user;
+        if (capture != null && capture.isOpened()) {
+            capture.release();
+        }
+
+        if (lastDetectedFace != null) {
+            lastDetectedFace.release();
+            lastDetectedFace = null;
+        }
     }
 }
