@@ -217,6 +217,15 @@ public class ServiceUser implements IService<User> {
         return null;
     }
 
+    public void updatePassword(int userId, String newPassword) throws SQLException {
+        String sql = "UPDATE `user` SET password = ? WHERE id = ?";
+        try (PreparedStatement ps = getConnectionOrThrow().prepareStatement(sql)) {
+            ps.setString(1, hashIfNeeded(newPassword));
+            ps.setInt(2, userId);
+            ps.executeUpdate();
+        }
+    }
+
     public User linkGoogleAccount(User existingUser, User googleUser) throws SQLException {
         String sql = "UPDATE `user` SET google_oauth_id = ?, oauth_provider = ? WHERE id = ?";
         try (PreparedStatement ps = getConnectionOrThrow().prepareStatement(sql)) {
