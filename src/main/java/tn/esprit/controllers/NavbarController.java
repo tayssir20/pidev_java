@@ -89,6 +89,7 @@ public class NavbarController {
         try {
             loadScene(event, "/ProfileUser.fxml", "Profile User");
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("Unable to open profile.");
         }
     }
@@ -116,6 +117,15 @@ public class NavbarController {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+    @FXML
+    private void goToCart(ActionEvent event) {
+        try {
+            loadScene(event, "/cart.fxml", "Mon Panier");
+        } catch (IOException e) {
+            e.printStackTrace(); // ← changez ça
+            System.out.println("Erreur: " + e.getMessage());
         }
     }
 }

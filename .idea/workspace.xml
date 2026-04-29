@@ -46,10 +46,47 @@
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="884cf7d6-6a9e-4e69-a425-b844a341d249" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tn/esprit/controllers/FaceRecognitionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tn/esprit/controllers/FaceRecognitionController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tn/esprit/controllers/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tn/esprit/controllers/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tn/esprit/services/FaceRecognitionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tn/esprit/services/FaceRecognitionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/FaceRecognition.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/FaceRecognition.fxml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="162" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="FxmlFile" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
   <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 2
 }</component>
-  <component name="ProjectId" id="3C5xZKwUw9scaqq4ByJEq2BgKLJ" />
+  <component name="ProjectId" id="3Cp4ukoB2rAlNh3MLo9XBWfQpkS" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -57,35 +94,17 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Application.FxLauncher.executor&quot;: &quot;Run&quot;,
-    &quot;Application.MainBlog.executor&quot;: &quot;Run&quot;,
     &quot;Application.MainFX.executor&quot;: &quot;Run&quot;,
-    &quot;Application.MainProduitCategorie.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.CategoryServiceTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.EquipeTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.MatchGameTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.ProductServiceTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.ProductServiceTest.testAddProduct.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.ProductServiceTest.testDeleteProduct.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.ProductServiceTest.testGetAllProducts.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.ProductServiceTest.testGetProductById.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.ProductServiceTest.testPrixNegatif.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.ProductServiceTest.testStockZero.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.ProductServiceTest.testUpdateProduct.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.ServiceUserTest (1).executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.ServiceUserTest.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;ToolWindow.AIAssistant.ShowToolbar&quot;: &quot;false&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/xampp2/htdocs/pidev_java&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/saada/pidev_java&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -94,6 +113,11 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.AcpAgentsConfigurable&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
+    ]
   }
 }</component>
   <component name="RecentsManager">
@@ -235,6 +259,98 @@
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\dot\pidev_java\src\main\resources" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="tn.esprit.services" />
+      <recent name="tn.esprit.entities" />
+      <recent name="tn.esprit.controllers" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.MainFX">
+    <configuration name="FxLauncher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="tn.esprit.test.FxLauncher" />
+      <module name="WorkshopJDBC-JavaFX-3A56" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;C:\Users\dot\.m2\repository\org\openjfx\javafx-controls\21.0.2;C:\Users\dot\.m2\repository\org\openjfx\javafx-fxml\21.0.2;C:\Users\dot\.m2\repository\org\openjfx\javafx-graphics\21.0.2;C:\Users\dot\.m2\repository\org\openjfx\javafx-base\21.0.2&quot; --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tn.esprit.test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MainFX" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="tn.esprit.test.MainFX" />
+      <module name="pidev" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;C:\Users\MSI\.m2\repository\org\openjfx\javafx-controls\21.0.2;C:\Users\MSI\.m2\repository\org\openjfx\javafx-fxml\21.0.2;C:\Users\MSI\.m2\repository\org\openjfx\javafx-graphics\21.0.2;C:\Users\MSI\.m2\repository\org\openjfx\javafx-base\21.0.2&quot; --add-modules javafx.controls,javafx.fxml" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tn.esprit.test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.FxLauncher" />
+      <item itemvalue="Application.MainFX" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.MainFX" />
+        <item itemvalue="Application.FxLauncher" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="884cf7d6-6a9e-4e69-a425-b844a341d249" name="Changes" comment="" />
+      <created>1777069404657</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1777069404657</updated>
+      <workItem from="1777069406113" duration="5191000" />
+      <workItem from="1777130740655" duration="5556000" />
+      <workItem from="1777155649846" duration="5754000" />
+      <workItem from="1777221854267" duration="2788000" />
+      <workItem from="1777394722302" duration="705000" />
+      <workItem from="1777395501038" duration="3584000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

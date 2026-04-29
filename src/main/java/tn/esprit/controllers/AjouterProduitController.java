@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import tn.esprit.entities.Category;
 import tn.esprit.entities.Product;
 import tn.esprit.services.CategoryService;
+import tn.esprit.services.HuggingFaceService;
 import tn.esprit.services.ProductService;
 
 import java.io.File;
@@ -21,6 +22,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.concurrent.Task;
 
 public class AjouterProduitController implements Initializable {
 
@@ -36,7 +38,8 @@ public class AjouterProduitController implements Initializable {
     private Product productToEdit = null;
     private List<Category> categories;
     private String selectedImagePath = "";
-
+    // ✅ Après
+    private HuggingFaceService huggingFaceService = new HuggingFaceService();
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         categories = categoryService.getAllCategories();
@@ -179,7 +182,53 @@ public class AjouterProduitController implements Initializable {
         errorLabel.setManaged(false);
     }
 
+    @FXML
+    private void handleGenerateDescription() {
+        String productName = nameField.getText().trim();
 
+        if (productName.isEmpty()) {
+            messageLabel.setStyle("-fx-text-fill: #f87171;");
+            messageLabel.setText("❌ Entrez d'abord le nom du produit !");
+            return;
+        }
+
+        // Loading
+        descriptionField.setText("⏳ Génération en cours...");
+        descriptionField.setDisable(true);
+        messageLabel.setStyle("-fx-text-fill: #94a3b8;");
+        messageLabel.setText("🤖 Grok AI génère la description...");
+
+        // Thread séparé pour ne pas bloquer l'UI
+        Task<String> task = new Task<>() {
+            @Override
+            protected String call() {
+                return huggingFaceService.generateDescription(productName);
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            String description = task.getValue();
+            if (description != null) {
+                descriptionField.setText(description.trim());
+                messageLabel.setStyle("-fx-text-fill: #27ae60;");
+                messageLabel.setText("✅ Description générée par Grok AI !");
+            } else {
+                descriptionField.setText("");
+                messageLabel.setStyle("-fx-text-fill: #f87171;");
+                messageLabel.setText("❌ Erreur génération !");
+            }
+            descriptionField.setDisable(false);
+        });
+
+        task.setOnFailed(e -> {
+            descriptionField.setText("");
+            descriptionField.setDisable(false);
+            messageLabel.setStyle("-fx-text-fill: #f87171;");
+            messageLabel.setText("❌ Erreur : " + task.getException().getMessage());
+        });
+
+        new Thread(task).start();
+    }
 
     @FXML
     private void handleChooseImage() {

@@ -1,9 +1,12 @@
 package tn.esprit.controllers;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -11,20 +14,24 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 import tn.esprit.entities.Blog;
 import tn.esprit.services.ServiceBlog;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
-
+import tn.esprit.services.ServiceBlogLike;
+import tn.esprit.services.ServiceBlogRating;
 public class AfficherBlogsController implements Initializable {
 
     @FXML private FlowPane  blogsContainer;
     @FXML private TextField searchField;
-
+    private final ServiceBlogLike   serviceLike   = new ServiceBlogLike();
+    private final ServiceBlogRating serviceRating = new ServiceBlogRating();
     private static final String HTDOCS_PATH = "C:/xampp/htdocs/blog_images/";
     private final ServiceBlog serviceBlog   = new ServiceBlog();
     private List<Blog> allBlogs;
@@ -100,6 +107,11 @@ public class AfficherBlogsController implements Initializable {
 
         body.getChildren().addAll(featuredBadge, tag, title, desc, spacer, footer);
         card.getChildren().addAll(imgPane, body);
+
+        // Navigation vers les détails
+        card.setCursor(javafx.scene.Cursor.HAND);
+        card.setOnMouseClicked(e -> openBlogDetail(blog));
+
         return card;
     }
 
@@ -150,6 +162,11 @@ public class AfficherBlogsController implements Initializable {
         );
 
         card.getChildren().addAll(imgPane, body, footer);
+
+        // Navigation vers les détails
+        card.setCursor(javafx.scene.Cursor.HAND);
+        card.setOnMouseClicked(e -> openBlogDetail(blog));
+
         return card;
     }
 
@@ -192,7 +209,6 @@ public class AfficherBlogsController implements Initializable {
     }
 
     private HBox buildFooter(Blog blog) {
-        // Avatar initiales
         String initials = blog.getTitle() != null && blog.getTitle().length() >= 2
                 ? blog.getTitle().substring(0, 2).toUpperCase() : "BL";
         Label avatar = new Label(initials);
@@ -201,17 +217,11 @@ public class AfficherBlogsController implements Initializable {
         avatar.setMaxSize(26, 26);
         avatar.setAlignment(Pos.CENTER);
         avatar.setStyle(
-                "-fx-background-color: #EDE9FE;" +
-                        "-fx-text-fill: #5B21B6;" +
-                        "-fx-font-size: 10px;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-background-radius: 13;"
-        );
+                "-fx-background-color: #EDE9FE; -fx-text-fill: #5B21B6;" +
+                        "-fx-font-size: 10px; -fx-font-weight: bold; -fx-background-radius: 13;");
 
-        // Date
         String dateStr = blog.getCreatedAt() != null
-                ? blog.getCreatedAt().toString().substring(0, 10)
-                : "";
+                ? blog.getCreatedAt().toString().substring(0, 10) : "";
         Label date = new Label(dateStr);
         date.setStyle("-fx-font-size: 11px; -fx-text-fill: #94a3b8;");
 
@@ -222,7 +232,19 @@ public class AfficherBlogsController implements Initializable {
         Label comments = new Label("💬 " + blog.getCommentCount());
         comments.setStyle("-fx-font-size: 11px; -fx-text-fill: #94a3b8;");
 
-        HBox footer = new HBox(8, avatar, date, spacer, comments);
+        // ✅ Likes depuis la DB
+        int likeCount = serviceLike.getLikeCount(blog.getId());
+        Label likes = new Label("❤️ " + likeCount);
+        likes.setStyle("-fx-font-size: 11px; -fx-text-fill: #94a3b8;");
+
+        // ✅ Rating depuis la DB
+        double avg = serviceRating.getAverageRating(blog.getId());
+        int ratingCount = serviceRating.getRatingCount(blog.getId());
+        Label rating = new Label(ratingCount > 0
+                ? String.format("⭐ %.1f", avg) : "⭐ -");
+        rating.setStyle("-fx-font-size: 11px; -fx-text-fill: #94a3b8;");
+
+        HBox footer = new HBox(8, avatar, date, spacer, likes, rating, comments);
         footer.setAlignment(Pos.CENTER_LEFT);
         footer.setPadding(new Insets(10, 14, 10, 14));
         return footer;
@@ -240,6 +262,21 @@ public class AfficherBlogsController implements Initializable {
                             && b.getCategory().toLowerCase().contains(query)))
                     .collect(Collectors.toList());
             displayBlogs(filtered);
+        }
+    }
+
+    private void openBlogDetail(Blog blog) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/BlogDetail.fxml"));
+            Parent root = loader.load();
+
+            BlogDetailController controller = loader.getController();
+            controller.setBlog(blog);
+
+            Stage stage = (Stage) blogsContainer.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
